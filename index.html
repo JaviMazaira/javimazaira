@@ -18,7 +18,7 @@
         .respuestas {
             background-color: #39FF14;
             color: black;
-            font-size: 20px;
+            font-size: 18px; /* Reducido el tamaño de letra aquí */
             padding: 10px;
             display: none;
         }
@@ -29,17 +29,20 @@
             padding: 10px;
             display: none;
         }
-        #confirmarEnviar {
-            background-color: #00BFFF; /* Azul celeste */
+        button {
+            background-color: #39FF14; /* Color verde */
             color: black;
-            font-size: 24px;
+            font-size: 20px;
             padding: 10px;
             border: none;
             cursor: pointer;
             margin-top: 10px;
         }
-        #confirmarEnviar:hover {
-            background-color: #009ACD; /* Azul más oscuro al pasar el ratón */
+        button:hover {
+            background-color: #32CD32; /* Color verde más oscuro */
+        }
+        #confirmarEnviar {
+            font-size: 24px; /* Tamaño de letra ajustado */
         }
     </style>
 </head>
@@ -182,7 +185,11 @@
                             sha: data.sha
                         })
                     })
-                        .then(() => alert("Datos enviados correctamente a GitHub."))
+                        .then(() => {
+                            alert("Datos enviados correctamente a GitHub.");
+                            // Ocultar el botón "Confirmar y Enviar" después de enviar
+                            document.getElementById('confirmarEnviar').style.display = 'none';
+                        })
                         .catch(error => console.error("Error al actualizar el archivo: ", error));
                 })
                 .catch(error => console.error("Error al obtener el archivo: ", error));

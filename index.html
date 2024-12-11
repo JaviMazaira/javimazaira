@@ -95,7 +95,6 @@
         </select><br><br>
 
         <button type="button" onclick="calcular()">Calcular</button><br><br>
-        <button type="button" id="confirmarEnviar" onclick="enviarAGitHub()" style="display:none;">Confirmar y Enviar</button>
     </form>
 
     <div class="resultado" id="resultado"></div>
@@ -142,62 +141,7 @@
             document.getElementById('respuestas').innerText = respuestas;
             document.getElementById('respuestas').style.display = 'block';
             document.getElementById('aviso').style.display = 'block';
-
-            // Mostrar el botón de "Confirmar y Enviar"
-            document.getElementById('confirmarEnviar').style.display = 'block';
-        }
-
-        function enviarAGitHub() {
-            const githubToken = "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"; // Reemplaza con tu token personal
-            const repoOwner = "JaviMazaira"; // Reemplaza con tu usuario
-            const repoName = "jmazaira"; // Reemplaza con tu repositorio
-            const filePath = "datos/formulario.json"; // Ruta del archivo en el repo
-
-            // Obtener contenido existente del archivo
-            fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                headers: {
-                    Authorization: `token ${githubToken}`
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al obtener el archivo. Puede que no exista aún.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const existingContent = data.content ? atob(data.content) : "[]"; // Si el archivo existe, decodifica el contenido, si no, inicia un array vacío.
-                const jsonData = JSON.parse(existingContent);
-
-                // Agregar nueva respuesta
-                jsonData.push({ respuesta: respuestas });
-
-                // Actualizar archivo en GitHub
-                const updatedContent = btoa(JSON.stringify(jsonData, null, 2));
-                
-                // Si el archivo no existe, GitHub crea uno nuevo al actualizarlo.
-                return fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `token ${githubToken}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        message: "Actualizar datos del formulario",
-                        content: updatedContent,
-                        sha: data.sha // SHA del archivo actual para actualizarlo correctamente
-                    })
-                });
-            })
-            .then(() => {
-                alert("Datos enviados correctamente a GitHub.");
-            })
-            .catch(error => {
-                console.error("Error al actualizar el archivo: ", error);
-                alert("Hubo un problema al enviar los datos. Intenta nuevamente.");
-            });
         }
     </script>
 </body>
 </html>
-

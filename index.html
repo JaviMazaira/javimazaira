@@ -9,7 +9,6 @@
             font-family: Arial, sans-serif;
         }
         .resultado {
-            background-color: #39FF14;
             color: black;
             font-weight: bold;
             font-size: 30px;
@@ -29,6 +28,18 @@
             font-size: 24px;
             padding: 10px;
             display: none;
+        }
+        #confirmarEnviar {
+            background-color: #00BFFF; /* Azul celeste */
+            color: black;
+            font-size: 24px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #confirmarEnviar:hover {
+            background-color: #009ACD; /* Azul más oscuro al pasar el ratón */
         }
     </style>
 </head>
@@ -84,6 +95,8 @@
         </select><br><br>
 
         <button type="button" onclick="calcular()">Calcular</button>
+        <!-- Botón Confirmar y Enviar debajo del de Calcular -->
+        <button type="button" id="confirmarEnviar" style="display: none;" onclick="enviarAGitHub()">Confirmar y Enviar</button>
     </form>
 
     <div class="resultado" id="resultado"></div>
@@ -131,20 +144,14 @@
             document.getElementById('respuestas').style.display = 'block';
             document.getElementById('aviso').style.display = 'block';
 
-            // Agregar botón de Confirmar y Enviar si no existe
-            if (!document.getElementById('confirmarEnviar')) {
-                const botonEnviar = document.createElement('button');
-                botonEnviar.id = 'confirmarEnviar';
-                botonEnviar.innerText = 'Confirmar y Enviar';
-                botonEnviar.onclick = enviarAGitHub;
-                document.body.appendChild(botonEnviar);
-            }
+            // Mostrar el botón "Confirmar y Enviar"
+            document.getElementById('confirmarEnviar').style.display = 'block';
         }
 
         function enviarAGitHub() {
-            const githubToken = "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"; // Reemplaza con tu token personal
-            const repoOwner = "JaviMazaira"; // Reemplaza con tu usuario
-            const repoName = "jmazaira"; // Reemplaza con tu repositorio
+            const githubToken = "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"; // Reemplaza con tu token personal 
+            const repoOwner = "JaviMazaira"; // Reemplaza con tu usuario 
+            const repoName = "jmazaira"; // Reemplaza con tu repositorio 
             const filePath = "datos/formulario.json"; // Ruta del archivo en el repo
 
             // Obtener contenido existente del archivo
@@ -183,4 +190,3 @@
     </script>
 </body>
 </html>
-

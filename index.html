@@ -30,10 +30,6 @@
             padding: 10px;
             display: none;
         }
-        .enviar {
-            display: none;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -88,7 +84,6 @@
         </select><br><br>
 
         <button type="button" onclick="calcular()">Calcular</button>
-        <button type="button" id="confirmarEnviar" class="enviar" onclick="enviar()">Confirmar y Enviar</button>
     </form>
 
     <div class="resultado" id="resultado"></div>
@@ -96,7 +91,7 @@
     <div class="aviso" id="aviso">No olvides enviar captura de esta información a Javi</div>
 
     <script>
-        let respuestas;
+        let respuestas = ""; // Variable global para almacenar respuestas
 
         function calcular() {
             // Obtener los valores de los campos
@@ -136,27 +131,56 @@
             document.getElementById('respuestas').style.display = 'block';
             document.getElementById('aviso').style.display = 'block';
 
-            // Mostrar el botón de confirmar y enviar
-            document.getElementById('confirmarEnviar').style.display = 'inline-block';
+            // Agregar botón de Confirmar y Enviar si no existe
+            if (!document.getElementById('confirmarEnviar')) {
+                const botonEnviar = document.createElement('button');
+                botonEnviar.id = 'confirmarEnviar';
+                botonEnviar.innerText = 'Confirmar y Enviar';
+                botonEnviar.onclick = enviarAGitHub;
+                document.body.appendChild(botonEnviar);
+            }
         }
 
-        function enviar() {
-            const data = {
-                informacion: respuestas // Enviamos toda la información en un solo campo
-            };
+        function enviarAGitHub() {
+            const githubToken = "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"; // Reemplaza con tu token personal
+            const repoOwner = "JaviMazaira"; // Reemplaza con tu usuario
+            const repoName = "jmazaira"; // Reemplaza con tu repositorio
+            const filePath = "datos/formulario.json"; // Ruta del archivo en el repo
 
-            // Enviar los datos al script de Google Apps
-            fetch("https://script.google.com/macros/s/AKfycbyT1jOyExEQQvSCC6Grzi3LghGFh5pMkNmA3hjNfNDkl_1QyR_9shSZl0cyMbGYqddINw/exec", {
-                method: "POST",
-                body: JSON.stringify(data),
+            // Obtener contenido existente del archivo
+            fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
                 headers: {
-                    "Content-Type": "application/json"
+                    Authorization: `token ${githubToken}`
                 }
             })
-            .then(response => response.text())
-            .then(data => alert(data))
-            .catch(error => console.error("Error:", error));
+                .then(response => response.json())
+                .then(data => {
+                    const existingContent = data.content ? atob(data.content) : "[]";
+                    const jsonData = JSON.parse(existingContent);
+
+                    // Agregar nueva respuesta
+                    jsonData.push({ respuesta: respuestas });
+
+                    // Actualizar archivo en GitHub
+                    const updatedContent = btoa(JSON.stringify(jsonData, null, 2));
+                    fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`, {
+                        method: "PUT",
+                        headers: {
+                            Authorization: `token ${githubToken}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: "Actualizar datos del formulario",
+                            content: updatedContent,
+                            sha: data.sha
+                        })
+                    })
+                        .then(() => alert("Datos enviados correctamente a GitHub."))
+                        .catch(error => console.error("Error al actualizar el archivo: ", error));
+                })
+                .catch(error => console.error("Error al obtener el archivo: ", error));
         }
     </script>
 </body>
 </html>
+

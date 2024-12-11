@@ -107,8 +107,9 @@
                 return;
             }
 
-            // Calcular el coste total
-            const total = nuevoSocio + modalidad + suplementoBTT + suplementoSki + suplementoSnowboard;
+            // Calcular el coste total con los 2€ adicionales
+            const gastosBancarios = 2;
+            const total = nuevoSocio + modalidad + suplementoBTT + suplementoSki + suplementoSnowboard + gastosBancarios;
             document.getElementById('resultado').innerText = `Total: ${total} Euros`;
             document.getElementById('resultado').style.display = 'block';
 
@@ -121,6 +122,7 @@
                 Suplemento BTT: ${document.getElementById('suplementoBTT').options[document.getElementById('suplementoBTT').selectedIndex].text},
                 Suplemento Ski Alpino: ${document.getElementById('suplementoSki').options[document.getElementById('suplementoSki').selectedIndex].text},
                 Suplemento Snowboard: ${document.getElementById('suplementoSnowboard').options[document.getElementById('suplementoSnowboard').selectedIndex].text},
+                Gastos bancarios: Sí, 2€,
                 Coste total: ${total} Euros
             `;
             document.getElementById('respuestas').innerText = respuestas;
@@ -133,7 +135,7 @@
             };
 
             // Enviar los datos al script de Google Apps
-            fetch("https://script.google.com/macros/library/d/1LboCza_9xY4rhycJIZ1KW8DO12nH_Zy3vWOQZFjf9txrCiwl_d5Ss_7P/1", {
+            fetch("https://script.google.com/macros/s/AKfycbyT1jOyExEQQvSCC6Grzi3LghGFh5pMkNmA3hjNfNDkl_1QyR_9shSZl0cyMbGYqddINw/exec", {
                 method: "POST",
                 body: JSON.stringify(data),
                 headers: {
